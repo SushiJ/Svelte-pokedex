@@ -1,3 +1,11 @@
 {
+	"compilerOptions": {
+		"baseUrl": "src/",
+		"paths": {
+			"@/components/*": ["components/*"],
+			"@/types/*": ["types/*"],
+			"@/stores/*": ["stores/*"]
+		}
+	},
 	"extends": "./.svelte-kit/tsconfig.json"
 }

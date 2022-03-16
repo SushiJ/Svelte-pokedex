@@ -1,5 +1,5 @@
 <script>
-	import { pokemon } from '../stores/pokestore';
+	import { fetchPokemon, pokemon } from '../stores/pokestore';
 	import PokemanCard from '../components/PokemanCard.svelte';
 
 	let searchTerm = '';
@@ -14,6 +14,7 @@
 			filteredPokemon = [...$pokemon];
 		}
 	}
+	fetchPokemon();
 </script>
 
 <svelte:head />

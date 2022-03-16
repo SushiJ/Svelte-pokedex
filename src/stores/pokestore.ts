@@ -1,17 +1,11 @@
+import type { Pokemon } from '@/types/types';
 import { writable } from 'svelte/store';
 
 export const pokemon = writable([]);
+const pokemonDetails = {};
+let loaded = false;
 
-export interface Pokemon {
-	count: number;
-	next: string;
-	previous: null;
-	results: Array<{
-		name: string;
-		url: string;
-	}>;
-}
-const fetchPokemon = async () => {
+export const fetchPokemon = async () => {
 	const url = `https://pokeapi.co/api/v2/pokemon?limit=150`;
 	const res = await fetch(url);
 	const data: Pokemon = await res.json();
@@ -25,6 +19,21 @@ const fetchPokemon = async () => {
 		};
 	});
 	pokemon.set(fetchedPokemon);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	loaded = true;
 };
 
-fetchPokemon();
+export const getPokemonById = async (id) => {
+	if (pokemonDetails[id]) return pokemonDetails[id];
+
+	try {
+		const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+		const res = await fetch(url);
+		const data = await res.json();
+		pokemonDetails[id] = data;
+		return data;
+	} catch (err) {
+		console.error(err);
+		return null;
+	}
+};
