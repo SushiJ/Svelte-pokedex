@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	import { getPokemonById } from '@/stores/pokestore';
+	import { getPokemonById } from '../../stores/pokestore';
 	import type { Pokeman } from '@/types/types';
 	export async function load({ params }) {
 		const { id } = params;
