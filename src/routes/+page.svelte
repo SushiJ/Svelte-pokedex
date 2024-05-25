@@ -1,20 +1,9 @@
 <script lang="ts">
-  import { fetchPokemon, pokemon } from "../store/poke";
-  // import PokemanCard from '../components/PokemanCard.svelte';
+  import type { PageData } from "./$types";
+  import PokemanCard from "../components/Card.svelte";
 
+  export let data: PageData;
   let searchTerm = "";
-  let filteredPokemon = [];
-
-  $: {
-    if (searchTerm) {
-      filteredPokemon = $pokemon.filter((poke) =>
-        poke.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-    } else {
-      filteredPokemon = [...$pokemon];
-    }
-  }
-  fetchPokemon();
 </script>
 
 <svelte:head />
@@ -37,8 +26,25 @@
   id=""
 />
 <div class="grid gap-4 md:grid-cols-2 grid-cols-1">
-  <p>yo</p>
-  <!-- {#each filteredPokemon as pokeman} -->
-  <!-- 	<PokemanCard {pokeman} /> -->
-  <!-- {/each} -->
+  {#each data.fetchedPokemon as pokemon}
+  <a
+    class="flex flex-col items-center p-6 bg-emerald-50 shadow-md rounded-md"
+	  href={`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`}
+  >
+    <img
+      class="object-contain h-32 w-auto"
+      src={pokemon.image}
+      alt={pokemon.name}
+    />
+    <h2 class="">
+      <span class="text-[#f44336] text-xl">
+        {pokemon.id}.
+      </span>
+
+      <span class="text-2xl uppercase">
+        {pokemon.name}
+    </span>
+    </h2>
+      </a>
+      {/each}
 </div>
