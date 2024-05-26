@@ -4,6 +4,7 @@
     image: string;
     name: string;
   };
+
   export let pokeman: Props;
 </script>
 

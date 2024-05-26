@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Card from "../components/Card.svelte";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -60,24 +61,6 @@
 />
 <div class="grid gap-4 md:grid-cols-2 grid-cols-1">
   {#each filteredPokes as pokemon}
-    <a
-      class="flex flex-col items-center p-6 bg-emerald-50 shadow-md rounded-md"
-      href={`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`}
-    >
-      <img
-        class="object-contain h-32 w-auto"
-        src={pokemon.image}
-        alt={pokemon.name}
-      />
-      <h2 class="">
-        <span class="text-[#f44336] text-xl">
-          {pokemon.id}.
-        </span>
-
-        <span class="text-2xl uppercase">
-          {pokemon.name}
-        </span>
-      </h2>
-    </a>
+    <Card pokeman={pokemon} />
   {/each}
 </div>
