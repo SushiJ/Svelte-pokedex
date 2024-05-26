@@ -1,9 +1,42 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import PokemanCard from "../components/Card.svelte";
 
   export let data: PageData;
   let searchTerm = "";
+  let bindedSearchTerm = "";
+
+  let filteredPokes: Array<{
+    name: string;
+    id: number;
+    image: string;
+  }> = [];
+
+  function debounceFn(cb: Function, delay: number) {
+    let timer: number | null;
+    return function (...args: any) {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(() => {
+        // @ts-ignore next-line
+        cb.apply(this, args);
+        timer = null;
+      }, delay);
+    };
+  }
+
+  const debounce = debounceFn((value: string) => (searchTerm = value), 500);
+
+  $: {
+    if (searchTerm) {
+      console.log(searchTerm);
+      filteredPokes = data.fetchedPokemon.filter((poke) =>
+        poke.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+    } else {
+      filteredPokes = [...data.fetchedPokemon];
+    }
+  }
 </script>
 
 <svelte:head />
@@ -18,33 +51,33 @@
   <span class="ml-2"> Pokedex </span>
 </h1>
 <input
-  bind:value={searchTerm}
+  bind:value={bindedSearchTerm}
   class="w-full rounded-md text-lg p-4 border-2 my-4 py-2 focus:border-[#f44336] focus:outline-none"
   type="text"
   name=""
   placeholder="Search for Pokemon"
-  id=""
+  on:keyup={() => debounce(bindedSearchTerm)}
 />
 <div class="grid gap-4 md:grid-cols-2 grid-cols-1">
-  {#each data.fetchedPokemon as pokemon}
-  <a
-    class="flex flex-col items-center p-6 bg-emerald-50 shadow-md rounded-md"
-	  href={`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`}
-  >
-    <img
-      class="object-contain h-32 w-auto"
-      src={pokemon.image}
-      alt={pokemon.name}
-    />
-    <h2 class="">
-      <span class="text-[#f44336] text-xl">
-        {pokemon.id}.
-      </span>
+  {#each filteredPokes as pokemon}
+    <a
+      class="flex flex-col items-center p-6 bg-emerald-50 shadow-md rounded-md"
+      href={`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`}
+    >
+      <img
+        class="object-contain h-32 w-auto"
+        src={pokemon.image}
+        alt={pokemon.name}
+      />
+      <h2 class="">
+        <span class="text-[#f44336] text-xl">
+          {pokemon.id}.
+        </span>
 
-      <span class="text-2xl uppercase">
-        {pokemon.name}
-    </span>
-    </h2>
-      </a>
-      {/each}
+        <span class="text-2xl uppercase">
+          {pokemon.name}
+        </span>
+      </h2>
+    </a>
+  {/each}
 </div>
